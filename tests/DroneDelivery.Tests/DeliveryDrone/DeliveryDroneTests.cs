@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using DroneDelivery.Application.Components.DeliveryOptimizer.Command;
 
 namespace DroneDelivery.Tests.DeliveryDrone;
@@ -7,46 +8,122 @@ namespace DroneDelivery.Tests.DeliveryDrone;
 public class DeliveryDroneTests
 {
     [Fact]
-    public async Task Should_Return_Expected_Attack_Location()
+    public async Task Should_Process_Correct_File_And_Return_Expected_Output()
     {
         // Arrange
         var droneSimulatorFile = await GetIFormFileMock.Execute();
 
         var deliveryOptimizerCommand = new DeliveryOptimizerCommand();
 
+        var input =
+            "[DroneA]\r\n\r\n[DroneB]\r\nTrip #1\r\n[LocationC], [LocationA]\r\nTrip #2\r\n[LocationE], [LocationB]\r\nTrip #3\r\n[LocationG], [LocationF]\r\nTrip #4\r\n[LocationK], [LocationI], [LocationD]\r\nTrip #5\r\n[LocationO], [LocationN], [LocationM], [LocationL], [LocationJ], [LocationH]\r\n\r\n[DroneC]\r\nTrip #1\r\n[LocationP]\r\n\r\n";
+        using var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+
+
         // Act
         var result = deliveryOptimizerCommand.Execute(droneSimulatorFile);
+        using var srExpected = new StreamReader(inputStream);
+        using var srActual = new StreamReader(result);
+
+        var strExpected = srExpected.ReadToEnd();
+        var strActual = srActual.ReadToEnd();
 
         // Assert
-        Assert.Equal(670, 670);
+        Assert.Equal(strExpected, strActual);
     }
 
     [Fact]
-    public async Task Should_Return_Different_Attack_Location_When_Input_Changed()
+    public async Task Should_Process_Different_Input_File_And_Return_Expected_Output()
     {
         // Arrange
-        var droneSimulatorFile = await GetIFormFileMock.ExecuteDifferentFile(); // Method to be created
+        var droneSimulatorFile = await GetIFormFileMock.ExecuteDifferentFile();
 
         var deliveryOptimizerCommand = new DeliveryOptimizerCommand();
 
+        var input =
+            "[DroneA]\r\nTrip #1\r\n[LocationF]\r\nTrip #2\r\n[LocationR], [LocationQ]\r\n\r\n[DroneB]\r\nTrip #1\r\n[LocationG], [LocationD], [LocationC]\r\nTrip #2\r\n[LocationJ], [LocationH], [LocationE]\r\nTrip #3\r\n[LocationM], [LocationL], [LocationB]\r\nTrip #4\r\n[LocationP], [LocationN], [LocationK], [LocationI]\r\nTrip #5\r\n[LocationO], [LocationA]\r\n\r\n[DroneC]\r\nTrip #1\r\n[LocationS]\r\n\r\n";
+        using var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+
         // Act
         var result = deliveryOptimizerCommand.Execute(droneSimulatorFile);
+        using var srExpected = new StreamReader(inputStream);
+        using var srActual = new StreamReader(result);
+
+        var strExpected = srExpected.ReadToEnd();
+        var strActual = srActual.ReadToEnd();
 
         // Assert
-        Assert.Equal(670, 670); // Expected result to be adjusted
+        Assert.Equal(strExpected, strActual);
     }
 
     [Fact]
-    public async Task Should_Handle_Empty_Input_File()
+    public async Task Should_Return_Error_For_Incorrect_File_Format()
     {
         // Arrange
-        var droneSimulatorFile = await GetIFormFileMock.ExecuteEmptyFile(); // Method to be created
+        var droneSimulatorFile = await GetIFormFileMock.ExecuteWrongFile();
+
         var deliveryOptimizerCommand = new DeliveryOptimizerCommand();
+
+        var input =
+            "Invalid input. Please check the data and try again.\r\n";
+        using var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(input));
 
         // Act
         var result = deliveryOptimizerCommand.Execute(droneSimulatorFile);
+        using var srExpected = new StreamReader(inputStream);
+        using var srActual = new StreamReader(result);
+
+        var strExpected = srExpected.ReadToEnd();
+        var strActual = srActual.ReadToEnd();
 
         // Assert
-        Assert.Equal(670, 670); // Assuming default return is 0
+        Assert.Equal(strExpected, strActual);
+    }
+
+    [Fact]
+    public async Task Should_Return_Error_For_File_With_Invalid_Data()
+    {
+        // Arrange
+        var droneSimulatorFile = await GetIFormFileMock.ExecuteFileWithError();
+
+        var deliveryOptimizerCommand = new DeliveryOptimizerCommand();
+
+        var input =
+            "Invalid input. Please check the data and try again.\r\n";
+        using var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+
+        // Act
+        var result = deliveryOptimizerCommand.Execute(droneSimulatorFile);
+        using var srExpected = new StreamReader(inputStream);
+        using var srActual = new StreamReader(result);
+
+        var strExpected = srExpected.ReadToEnd();
+        var strActual = srActual.ReadToEnd();
+
+        // Assert
+        Assert.Equal(strExpected, strActual);
+    }
+
+    [Fact]
+    public async Task Should_Return_Error_For_Empty_Input_File()
+    {
+        // Arrange
+        var droneSimulatorFile = await GetIFormFileMock.ExecuteEmptyFile();
+        var deliveryOptimizerCommand = new DeliveryOptimizerCommand();
+
+        var input =
+            "Invalid input. Please check the data and try again.\r\n";
+        using var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(input));
+
+        // Act
+        var result = deliveryOptimizerCommand.Execute(droneSimulatorFile);
+        using var srExpected = new StreamReader(inputStream);
+        using var srActual = new StreamReader(result);
+
+        var strExpected = srExpected.ReadToEnd();
+        var strActual = srActual.ReadToEnd();
+
+        // Assert
+        Assert.Equal(strExpected, strActual);
     }
 }

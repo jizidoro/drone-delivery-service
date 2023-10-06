@@ -49,7 +49,7 @@ public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOption
             Title = "Clean Architecture DroneDelivery",
             Version = description.ApiVersion.ToString(),
             Description = "",
-            Contact = new OpenApiContact {Name = "name aqui", Email = "email@aqui"},
+            Contact = new OpenApiContact {Name = "jhonatan izidoro antunes", Email = "jhonatanizidoro@gmail.com"},
             TermsOfService = new Uri(UriString),
             License = new OpenApiLicense
             {

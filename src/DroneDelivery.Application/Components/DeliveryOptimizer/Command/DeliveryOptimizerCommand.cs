@@ -1,19 +1,23 @@
 ﻿using DroneDelivery.Application.Components.DeliveryOptimizer.Core;
-using DroneDelivery.Domain.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace DroneDelivery.Application.Components.DeliveryOptimizer.Command;
 
 public class DeliveryOptimizerCommand : IDeliveryOptimizerCommand
 {
-    public List<Delivery> Execute(IFormFile file)
+    public MemoryStream Execute(IFormFile file)
     {
-        var processedFile = ProcessFile.Execute(file);
+        var (drones, locations) = ProcessFile.Execute(file);
 
-        var optimizedDeliveries = GetMaxCombination.Execute(processedFile.Drones, processedFile.Locations);
+        if (drones.Count == 0 || locations.Count == 0)
+        {
+            return GenerateErrorOutput.Execute();
+        }
 
-        GenerateOutput.Execute(optimizedDeliveries, processedFile.Drones);
+        var optimizedDeliveries = GetMinimalCombination.Execute(drones, locations);
 
-        return optimizedDeliveries;
+        var outputFile = GenerateOutput.Execute(optimizedDeliveries, drones);
+
+        return outputFile;
     }
 }

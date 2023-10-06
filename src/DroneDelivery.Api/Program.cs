@@ -35,16 +35,37 @@ public static class Program
 
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
+        var builder = WebApplication.CreateBuilder(args);
+        var app = builder.Build();
+
+        if (app.Environment.IsProduction())
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostContext, configApp) =>
+                {
+                    configApp.AddCommandLine(args);
+                    LoggingExtensions.CreateLog(Providers);
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>()
+                        .UseKestrel(options =>
+                        {
+                            // Bind to the port Heroku provides
+                            options.Listen(IPAddress.Any,
+                                int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "5000"));
+                        });
+                })
+                .UseSerilog(providers: Providers);
+        }
+
         return Host.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((hostContext, configApp) =>
             {
                 configApp.AddCommandLine(args);
                 LoggingExtensions.CreateLog(Providers);
             })
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            })
+            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
             .UseSerilog(providers: Providers);
     }
 }

@@ -12,30 +12,46 @@ public static class ProcessFile
 
         using (var reader = new StreamReader(file.OpenReadStream()))
         {
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 var values = line.Split(new[] {"], ["}, StringSplitOptions.None)
                     .Select(val => val.Trim('[', ' ', ']'))
                     .ToList();
 
+                // Check for invalid format
+                if (values.Count % 2 != 0)
+                {
+                    return (new List<Drone>(), new List<Location>());
+                }
+
                 for (var i = 0; i < values.Count; i += 2)
                 {
-                    if (line.Contains("Drone"))
+                    if (i + 1 >= values.Count)
+                        continue;
+
+                    if (int.TryParse(values[i + 1], out var weightValue))
                     {
-                        drones.Add(new Drone
+                        if (line.Contains("Drone"))
                         {
-                            Name = values[i],
-                            MaxWeight = int.Parse(values[i + 1])
-                        });
+                            drones.Add(new Drone
+                            {
+                                Name = values[i],
+                                MaxWeight = weightValue
+                            });
+                        }
+                        else
+                        {
+                            locations.Add(new Location
+                            {
+                                Address = values[i],
+                                PackageWeight = weightValue
+                            });
+                        }
                     }
                     else
                     {
-                        locations.Add(new Location
-                        {
-                            Address = values[i],
-                            PackageWeight = int.Parse(values[i + 1])
-                        });
+                        // Invalid weight format
+                        return (new List<Drone>(), new List<Location>());
                     }
                 }
             }

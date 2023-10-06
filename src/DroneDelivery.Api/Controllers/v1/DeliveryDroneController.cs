@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using DroneDelivery.API.Modules.Common;
 using DroneDelivery.Application.Components.DeliveryOptimizer.Command;
 using Microsoft.AspNetCore.Http;
@@ -21,14 +20,15 @@ public class DeliveryDroneController : ControllerBase
         _deliveryOptimizerCommand = deliveryOptimizerCommand;
     }
 
-    [HttpPost("upload-file")]
+    [HttpPost("delivery-optimizer")]
     [ApiConventionMethod(typeof(CustomApiConventions), nameof(CustomApiConventions.Post))]
-    public async Task<IActionResult> UploadFile(IFormFile file)
+    public IActionResult DownloadDeliveryReport(IFormFile file)
     {
         try
         {
             var result = _deliveryOptimizerCommand.Execute(file);
-            return StatusCode(201, result);
+
+            return File(result, "text/plain", "deliveryReport.txt");
         }
         catch (Exception ex)
         {

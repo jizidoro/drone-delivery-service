@@ -1,33 +1,34 @@
-﻿using DroneDelivery.Domain.Models;
+﻿using System.Text;
+using DroneDelivery.Domain.Models;
 
 namespace DroneDelivery.Application.Components.DeliveryOptimizer.Core;
 
 public static class GenerateOutput
 {
-    public static void Execute(List<Delivery> optimizedDeliveries, List<Drone> drones)
+    public static MemoryStream Execute(List<Delivery> optimizedDeliveries, List<Drone> drones)
     {
         var groupedDeliveries = optimizedDeliveries.GroupBy(d => d.AssignedDrone.Name).OrderBy(g => g.Key);
 
-        var result = "";
+        var result = new StringBuilder();
 
         foreach (var drone in drones)
         {
-            result += $"[{drone.Name}]\n";
+            result.AppendLine($"[{drone.Name}]");
             var tripCount = 1;
 
             var deliveriesByDrone = optimizedDeliveries.Where(x => x.AssignedDrone.Name == drone.Name).ToList();
 
             foreach (var delivery in deliveriesByDrone)
             {
-                result += $"Trip #{tripCount}\n";
-                result += string.Join(", ", delivery.Locations.Select(l => $"[{l.Address}]"));
-                result += "\n";
+                result.AppendLine($"Trip #{tripCount}");
+                result.AppendLine(string.Join(", ", delivery.Locations.Select(l => $"[{l.Address}]")));
                 tripCount++;
             }
 
-            result += "\n";
+            result.AppendLine();
         }
 
-        File.WriteAllText("output.txt", result);
+        var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(result.ToString()));
+        return memoryStream;
     }
 }

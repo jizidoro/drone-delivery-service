@@ -2,7 +2,7 @@
 
 namespace DroneDelivery.Application.Components.DeliveryOptimizer.Core;
 
-public static class GetMaxCombination
+public static class GetMinimalCombination
 {
     public static List<Delivery> Execute(List<Drone> drones, List<Location> locations)
     {

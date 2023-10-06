@@ -12,13 +12,21 @@
 	<ItemGroup>
 	  <None Remove="DeliveryDrone\commands.txt" />
 	  <None Remove="DeliveryDrone\commands2.txt" />
+	  <None Remove="DeliveryDrone\commands3.txt" />
+	  <None Remove="DeliveryDrone\commands4.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="DeliveryDrone\commands.txt">
+	  <EmbeddedResource Include="DeliveryDrone\Data\commands.txt">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </EmbeddedResource>
-	  <EmbeddedResource Include="DeliveryDrone\commands2.txt">
+	  <EmbeddedResource Include="DeliveryDrone\Data\commands4.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="DeliveryDrone\Data\commands3.txt">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="DeliveryDrone\Data\commands2.txt">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </EmbeddedResource>
 	</ItemGroup>
