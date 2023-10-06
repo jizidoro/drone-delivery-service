@@ -50,7 +50,6 @@ public static class ProcessFile
                     }
                     else
                     {
-                        // Invalid weight format
                         return (new List<Drone>(), new List<Location>());
                     }
                 }

@@ -6,15 +6,27 @@ public static class CalculateDPTable
 {
     public static bool[,] Execute(List<Location> weights, int target)
     {
+        // Initialize the DP table
         var dp = new bool[weights.Count + 1, target + 1];
+
+        // Base case: there's always a subset with sum 0
         dp[0, 0] = true;
 
-        for (var i = 1; i <= weights.Count; i++)
+        // Iterate through all items and all weights
+        for (var itemIndex = 1; itemIndex <= weights.Count; itemIndex++)
         {
-            for (var j = 0; j <= target; j++)
+            for (var weightIndex = 0; weightIndex <= target; weightIndex++)
             {
-                dp[i, j] = dp[i - 1, j] ||
-                           (weights[i - 1].PackageWeight <= j && dp[i - 1, j - weights[i - 1].PackageWeight]);
+                var currentPackageWeight = weights[itemIndex - 1].PackageWeight;
+
+                // Two possible cases:
+                // 1. Without considering the current item
+                // 2. Considering the current item
+                var isPossibleWithoutCurrent = dp[itemIndex - 1, weightIndex];
+                var isPossibleWithCurrent = currentPackageWeight <= weightIndex 
+                                            && dp[itemIndex - 1, weightIndex - currentPackageWeight];
+
+                dp[itemIndex, weightIndex] = isPossibleWithoutCurrent || isPossibleWithCurrent;
             }
         }
 

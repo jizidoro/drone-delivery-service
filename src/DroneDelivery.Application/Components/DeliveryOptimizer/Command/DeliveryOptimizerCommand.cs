@@ -9,7 +9,7 @@ public class DeliveryOptimizerCommand : IDeliveryOptimizerCommand
     {
         var (drones, locations) = ProcessFile.Execute(file);
 
-        if (drones.Count == 0 || locations.Count == 0)
+        if (drones.Count == 0 || drones.Count > 100 || locations.Count == 0)
         {
             return GenerateErrorOutput.Execute();
         }
