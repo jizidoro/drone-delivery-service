@@ -29,8 +29,7 @@ public sealed class Startup
             .AddSwagger()
             .AddUseCases()
             .AddCustomControllers()
-            .AddCustomCors()
-            .AddProxy();
+            .AddCustomCors();
 
         services.AddLogging();
     }
@@ -47,14 +46,8 @@ public sealed class Startup
         {
             app.UseDeveloperExceptionPage();
         }
-        else
-        {
-            app.UseExceptionHandler("/api/V1/CustomError")
-                .UseHsts();
-        }
 
         app
-            .UseProxy(Configuration)
             .UseCustomCors()
             .UseRouting()
             .UseVersionedSwagger(provider, Configuration)

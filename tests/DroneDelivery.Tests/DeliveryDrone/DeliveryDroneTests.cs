@@ -10,12 +10,12 @@ public class DeliveryDroneTests
     public async Task Should_Return_Expected_Attack_Location()
     {
         // Arrange
-        var detectiveSimulatorFile = await GetIFormFileMock.Execute();
+        var droneSimulatorFile = await GetIFormFileMock.Execute();
 
         var deliveryOptimizerCommand = new DeliveryOptimizerCommand();
 
         // Act
-        var result = deliveryOptimizerCommand.Execute(detectiveSimulatorFile);
+        var result = deliveryOptimizerCommand.Execute(droneSimulatorFile);
 
         // Assert
         Assert.Equal(670, 670);
@@ -25,12 +25,12 @@ public class DeliveryDroneTests
     public async Task Should_Return_Different_Attack_Location_When_Input_Changed()
     {
         // Arrange
-        var detectiveSimulatorFile = await GetIFormFileMock.ExecuteDifferentFile(); // Method to be created
+        var droneSimulatorFile = await GetIFormFileMock.ExecuteDifferentFile(); // Method to be created
 
         var deliveryOptimizerCommand = new DeliveryOptimizerCommand();
 
         // Act
-        var result = deliveryOptimizerCommand.Execute(detectiveSimulatorFile);
+        var result = deliveryOptimizerCommand.Execute(droneSimulatorFile);
 
         // Assert
         Assert.Equal(670, 670); // Expected result to be adjusted
@@ -40,11 +40,11 @@ public class DeliveryDroneTests
     public async Task Should_Handle_Empty_Input_File()
     {
         // Arrange
-        var detectiveSimulatorFile = await GetIFormFileMock.ExecuteEmptyFile(); // Method to be created
+        var droneSimulatorFile = await GetIFormFileMock.ExecuteEmptyFile(); // Method to be created
         var deliveryOptimizerCommand = new DeliveryOptimizerCommand();
 
         // Act
-        var result = deliveryOptimizerCommand.Execute(detectiveSimulatorFile);
+        var result = deliveryOptimizerCommand.Execute(droneSimulatorFile);
 
         // Assert
         Assert.Equal(670, 670); // Assuming default return is 0

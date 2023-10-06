@@ -1,5 +1,4 @@
 ﻿using DroneDelivery.Domain.Models;
-using Microsoft.IdentityModel.Tokens;
 
 namespace DroneDelivery.Application.Components.DeliveryOptimizer.Core;
 
@@ -11,7 +10,7 @@ public static class GetMaxCombination
 
         var target = drones.Max(x => x.MaxWeight);
 
-        while (!locations.IsNullOrEmpty())
+        while (locations.Count > 0)
         {
             var dp = CalculateDPTable.Execute(locations, target);
 

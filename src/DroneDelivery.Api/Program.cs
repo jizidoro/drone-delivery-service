@@ -1,3 +1,4 @@
+using System.Net;
 using DroneDelivery.API.Modules.Common;
 using Serilog.Extensions.Logging;
 
@@ -40,7 +41,10 @@ public static class Program
                 configApp.AddCommandLine(args);
                 LoggingExtensions.CreateLog(Providers);
             })
-            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            })
             .UseSerilog(providers: Providers);
     }
 }
